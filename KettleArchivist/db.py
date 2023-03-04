@@ -102,7 +102,7 @@ class ArchiveDB:
                 return true if sucessful
         """
         try:
-            self.db.execute("UPDATE VIDEOS set SAVED = TRUE where ID = ?", id)
+            self.db.execute("UPDATE VIDEOS set SAVED = TRUE where ID = ?", (id,))
             self.db.commit()
         except Exception:
             console.print_exception(show_locals=True)
