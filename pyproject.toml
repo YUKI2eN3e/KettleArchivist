@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "kettlearchivist"
 version = "0.1.0"
-description = "Toolset for The Kettle Archive Project"
+description = "Downloader tool for The Kettle Archive Project"
 authors = ["Yuki Nagato <37764578+YUKI2eN3e@users.noreply.github.com>"]
 readme = "README.md"
 packages = [

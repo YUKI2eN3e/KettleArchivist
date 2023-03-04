@@ -1,5 +1,5 @@
 # Kettle Archivist
-Toolset for The Kettle Archive Project
+Downloader tool for The Kettle Archive Project
 
 
 ## Install
