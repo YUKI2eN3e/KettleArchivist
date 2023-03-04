@@ -4,17 +4,24 @@ from . import *
 
 class ArchiveDB:
     def __init__(self, file: str = None) -> None:
-        self.db = sqlite3.connect("KettleArchive.db")
+        
         if file is None:
-            self.db.execute(
-                """CREATE TABLE VIDEOS (
-				ID		TEXT 	PRIMARY KEY 	NOT NULL,
-				TITLE	TEXT	NOT NULL,
-				SAVED	BOOL	NOT NULL
-			);"""
-            )
+            self.db = sqlite3.connect(DATABASE_FILE)
+        else:
+            self.db = sqlite3.connect(file)
+        self.db.execute(
+            """CREATE TABLE IF NOT EXISTS VIDEOS (
+            ID		TEXT 	PRIMARY KEY 	NOT NULL,
+            TITLE	TEXT	NOT NULL,
+            VIEWS   INT     NOT NULL,
+            SAVED	BOOL	NOT NULL
+            );"""
+        )
+    
+    def add(self, video:Video) -> bool:
+        return self.add_video(video.id, video.title, video.views)
 
-    def add_video(self, id: str, title: str = None, saved=False) -> bool:
+    def add_video(self, id: str, title: str = None, views: int = 0, saved=False) -> bool:
         """
         Parameters
         ----------
@@ -22,6 +29,8 @@ class ArchiveDB:
                 the video id (e.g. for "https://www.youtube.com/watch?v=MJ4f7bpNnis" the id is "MJ4f7bpNnis")
         title : str
                 the title of the video
+        views : int
+                the number of views the video has
         saved : bool
                 wether the video has been saved or not
 
@@ -32,8 +41,8 @@ class ArchiveDB:
         """
         try:
             self.db.execute(
-                "INSERT INTO VIDEOS (ID, TITLE, SAVED) VALUES(?, ?, ?)",
-                [id, title, saved],
+                "INSERT INTO VIDEOS (ID, TITLE, VIEWS, SAVED) VALUES(?, ?, ?, ?)",
+                (id, title, views, saved),
             )
             self.db.commit()
         except Exception:
