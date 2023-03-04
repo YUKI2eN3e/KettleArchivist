@@ -4,6 +4,7 @@ from . import scraper
 from . import downloader
 from rich.progress import track
 import argparse
+from sys import platform
 from . import *
 
 
@@ -33,6 +34,14 @@ def get_args():
         default=False,
         help="Redownload all videos",
     )
+    if platform == "win32":
+        parser.add_argument(
+            "-o", "--output-dir", default=".\\", help="The folder to save the videos to"
+        )
+    else:
+        parser.add_argument(
+            "-o", "--output-dir", default="./", help="The folder to save the videos to"
+        )
     parser.add_argument("-v", "--verbose", action="store_true", default=False)
     return parser.parse_args()
 
@@ -61,7 +70,7 @@ def run():
                 )
             )
     if args.download:
-        downloader.download_all()
+        downloader.download_all(args.output_dir)
     pass
 
 
