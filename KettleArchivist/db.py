@@ -1,10 +1,10 @@
 import sqlite3
+from typing import List
 from . import *
 
 
 class ArchiveDB:
     def __init__(self, file: str = None) -> None:
-        
         if file is None:
             self.db = sqlite3.connect(DATABASE_FILE)
         else:
@@ -24,14 +24,16 @@ class ArchiveDB:
             SAVED	BOOL	NOT NULL
             );"""
         )
-    
-    def add(self, video:Video) -> bool:
-        if(video.views >= 0):
+
+    def add(self, video: Video) -> bool:
+        if video.views >= 0:
             return self.add_video(video.id, video.title, video.views)
         else:
             return self.add_short(video.id, video.title)
 
-    def add_video(self, id: str, title: str = None, views: int = 0, saved=False) -> bool:
+    def add_video(
+        self, id: str, title: str = None, views: int = 0, saved=False
+    ) -> bool:
         """
         Parameters
         ----------
@@ -59,7 +61,7 @@ class ArchiveDB:
             console.print_exception(show_locals=True)
             return False
         return True
-    
+
     def add_short(self, id: str, title: str = None, saved=False) -> bool:
         """
         Parameters
@@ -106,3 +108,16 @@ class ArchiveDB:
             console.print_exception(show_locals=True)
             return False
         return True
+
+    def get_videos(self) -> List[Video]:
+        videos = list()
+        try:
+            cur = self.db.cursor()
+            cur.execute("SELECT * FROM VIDEOS where SAVED = FALSE ORDER BY VIEWS DESC")
+            rows = cur.fetchall()
+            for row in rows:
+                videos.append(Video(row[0], row[1], row[2]))
+        except Exception:
+            console.print_exception(show_locals=True)
+            return False
+        return videos
