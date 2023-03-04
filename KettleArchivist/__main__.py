@@ -70,7 +70,7 @@ def run():
                 )
             )
     if args.download:
-        downloader.download_all(args.output_dir)
+        downloader.download_all(args.output_dir, args.verbose)
     pass
 
 
