@@ -17,7 +17,11 @@ def load_videos_in_db():
     videos = scraper.get_videos()
     archive = db.ArchiveDB()
     for video in track(videos, description="Adding Video Listings To Database..."):
-        archive.add(video)
+        if video is not None:
+            try:
+                archive.add(video)
+            except:
+                console.stderr("[b]Could not add video:[/b]\t{}".format(video))
 
 def run():
     console.print("Welcome to [b]The Kettle Archive Project[/b]!")
